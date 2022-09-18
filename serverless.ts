@@ -17,20 +17,24 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
-    iamRoleStatements: [
-      {
-        Effect: "Allow",
-        Action: [
-          "dynamodb:Query",
-          "dynamodb:Scan",
-          "dynamodb:GetItem",
-          "dynamodb:PutItem",
-          "dynamodb:UpdateItem",
-          "dynamodb:DeleteItem",
-        ],
-        Resource: "*",
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: [
+              "dynamodb:Query",
+              "dynamodb:Scan",
+              "dynamodb:GetItem",
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:DeleteItem",
+            ],
+            Resource: "*",
+          }
+        ]
       }
-    ]
+    }
   },
   functions: { fnSync, fnPokemonListByType, fnPokemonNameById, fnPokedex },
   package: { individually: true },
@@ -55,7 +59,7 @@ const serverlessConfiguration: AWS = {
           AttributeDefinitions: [
             {
               AttributeName: "id",
-              AttributeType: "s",
+              AttributeType: "N",
             }
           ],
           KeySchema: [
@@ -65,7 +69,7 @@ const serverlessConfiguration: AWS = {
             },
           ],
           ProvisionedThroughput: {
-            ReadCapacityUnits: 1,
+            ReadCapacityUnits: 5,
             WriteCapacityUnits: 1,
           },
           TableName: POKEMON_LIST_TABLE,
@@ -78,7 +82,7 @@ const serverlessConfiguration: AWS = {
           AttributeDefinitions: [
             {
               AttributeName: "id",
-              AttributeType: "n",
+              AttributeType: "N",
             }
           ],
           KeySchema: [
@@ -88,7 +92,7 @@ const serverlessConfiguration: AWS = {
             },
           ],
           ProvisionedThroughput: {
-            ReadCapacityUnits: 1,
+            ReadCapacityUnits: 5,
             WriteCapacityUnits: 1,
           },
           TableName: POKEMON_TABLE,

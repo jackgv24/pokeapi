@@ -66,11 +66,11 @@ The project code base is mainly located within the `src` folder. This folder is 
 │   ├── functions               # Lambda configuration and source code folder
 │   │   ├── hello
 │   │   │   ├── handler.ts      # `Hello` lambda source code
-│   │   │   ├── index.ts        # `Hello` lambda Serverless configuration
+│   │   │   ├── utils.ts        # `Hello` lambda Serverless configuration
 │   │   │   ├── mock.json       # `Hello` lambda input parameter, if any, for local invocation
 │   │   │   └── schema.ts       # `Hello` lambda input event JSON-Schema
 │   │   │
-│   │   └── index.ts            # Import/export of all lambda configurations
+│   │   └── utils.ts            # Import/export of all lambda configurations
 │   │
 │   └── libs                    # Lambda shared code
 │       └── apiGateway.ts       # API Gateway specific helpers

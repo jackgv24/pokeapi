@@ -6,7 +6,8 @@
       "@libs/*": ["src/libs/*"],
       "@interface/*": ["src/interfaces/*"],
       "@db/*": ["src/db/*"],
-      "@constants/*": ["src/constants/*"]
+      "@constants/*": ["src/constants/*"],
+      "@helpers/*": ["src/helpers/*"]
     }
   }
 }

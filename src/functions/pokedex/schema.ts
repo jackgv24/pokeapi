@@ -3,5 +3,5 @@ export default {
   properties: {
     name: { type: 'string' }
   },
-  required: ['name']
+  required: []
 } as const;

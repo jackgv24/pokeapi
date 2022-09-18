@@ -5,14 +5,14 @@ import { POKEMON_TABLE } from "@constants/index"
 import { Pokemon as PokemonApi } from "pokenode-ts";
 
 class PokemonDb {
-    private db = new DynamoDB.DocumentClient()
+    private static db = new DynamoDB.DocumentClient()
 
-    public async getById(id: number): Promise<Pokemon | undefined> {
+    public static async getById(id: number): Promise<Pokemon | undefined> {
         try {
             const params: DocumentClient.GetItemInput = {
                 TableName: POKEMON_TABLE,
                 Key: {
-                    id
+                    id: `POKEMON_${id}`
                 }
             };
             const tableQuery = await this.db.get(params).promise();
@@ -25,7 +25,7 @@ class PokemonDb {
         }
     }
 
-    public async getByType(type: string): Promise<Pokemon[]> {
+    public static async getByType(type: string): Promise<Pokemon[]> {
         try {
             const params: DocumentClient.ScanInput = {
                 TableName : POKEMON_TABLE,
@@ -45,18 +45,22 @@ class PokemonDb {
         }
     }
 
-    public async create(pokemon: PokemonApi): Promise< Pokemon | undefined> {
+    public static async create(pokemon: PokemonApi): Promise< Pokemon | undefined> {
         try {
             const item: Pokemon = {
                 ...pokemon,
-                id: pokemon.id,
-                type: pokemon.types.map(x => x.type).join("_")
+                id: `POKEMON_${pokemon.id}`,
+                type: pokemon.types.map(x => x.type.name).join("_")
             }
+
             const params: DocumentClient.PutItemInput = {
                 TableName: POKEMON_TABLE,
-                Item: item
+                Item: item,
+                ReturnConsumedCapacity: "TOTAL",
             }
-            await this.db.put(params);
+            const result = await this.db.put(params).promise();
+            console.log(result);
+            return item;
         } catch (e) {
             console.error(`Pokedex - getByType - ${String(e)}`);
             return undefined;
