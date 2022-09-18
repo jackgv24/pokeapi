@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-
-import hello from '@functions/hello';
+import { POKEMON_LIST_TABLE, POKEMON_TABLE } from "@constants/index";
+import pokedex from '@functions/pokedex';
 
 const serverlessConfiguration: AWS = {
   service: 'pokedex',
@@ -17,9 +17,22 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: [
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+        ],
+        Resource: "*",
+      }
+    ]
   },
-  // import the function via paths
-  functions: { hello },
+  functions: { pokedex },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -33,6 +46,56 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
   },
+  resources: {
+    Resources: {
+      PokemonListTable: {
+        Type: "AWS::DynamoDB::Table",
+        DeletionPolicy: "Retain",
+        Properties: {
+          AttributeDefinitions: [
+            {
+              AttributeName: "id",
+              AttributeType: "s",
+            }
+          ],
+          KeySchema: [
+            {
+              AttributeName: "id",
+              KeyType: "HASH",
+            },
+          ],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 1,
+            WriteCapacityUnits: 1,
+          },
+          TableName: POKEMON_LIST_TABLE,
+        },
+      },
+      PokemonTable: {
+        Type: "AWS::DynamoDB::Table",
+        DeletionPolicy: "Retain",
+        Properties: {
+          AttributeDefinitions: [
+            {
+              AttributeName: "id",
+              AttributeType: "n",
+            }
+          ],
+          KeySchema: [
+            {
+              AttributeName: "id",
+              KeyType: "HASH",
+            },
+          ],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 1,
+            WriteCapacityUnits: 1,
+          },
+          TableName: POKEMON_TABLE,
+        },
+      },
+    },
+  }
 };
 
 module.exports = serverlessConfiguration;
