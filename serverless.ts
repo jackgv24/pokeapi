@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 import { POKEMON_LIST_TABLE, POKEMON_TABLE } from "@constants/index";
-import pokedex from '@functions/pokedex';
+import { fnSync, fnPokemonListByType, fnPokemonNameById, fnPokedex } from '@functions/pokedex';
 
 const serverlessConfiguration: AWS = {
   service: 'pokedex',
@@ -32,7 +32,7 @@ const serverlessConfiguration: AWS = {
       }
     ]
   },
-  functions: { pokedex },
+  functions: { fnSync, fnPokemonListByType, fnPokemonNameById, fnPokedex },
   package: { individually: true },
   custom: {
     esbuild: {
